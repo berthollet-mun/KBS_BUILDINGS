@@ -91,7 +91,7 @@ class ConfigurationController extends GetxController {
       buttonColor: Colors.blue,
       onConfirm: () {
         Get.back();
-        updateConfiguration(config.cle!, controller.text.trim());
+        updateConfiguration(config.cle, controller.text.trim());
               controller.dispose();
       },
       onCancel: () {

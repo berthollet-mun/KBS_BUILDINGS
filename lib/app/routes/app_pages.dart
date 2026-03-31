@@ -2,6 +2,7 @@
 
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:kbs/views/shared/widgets/main_scaffold.dart';
 import 'app_routes.dart';
 
 // --- Views ---
@@ -272,11 +273,11 @@ class AppPages {
       name: AppRoutes.roles,
       page: () => const RolesPage(),
     ),
-  ];
-
-  //  ==================== DASHBOARD ====================
+ //  ==================== DASHBOARD ====================
   GetPage(
-  name: AppRoutes.dashboard,
-  page: () => const MainScaffold(),  // ← C'est le shell avec bottom nav
-),
+    name: AppRoutes.dashboard,
+    page: () => const MainScaffold(),  // ← C'est le shell avec bottom nav
+  ),
+
+  ];
 }
