@@ -1,6 +1,7 @@
 // lib/app/routes/app_pages.dart
 
 import 'package:get/get.dart';
+import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'app_routes.dart';
 
 // --- Views ---

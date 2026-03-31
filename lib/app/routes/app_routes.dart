@@ -81,4 +81,7 @@ class AppRoutes {
 
   // --- Rôles ---
   static const String roles = '/roles';
+
+  // --- home ---
+static const String home = '/home';  // Le MainScaffold
 }
