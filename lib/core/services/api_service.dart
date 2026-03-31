@@ -9,7 +9,7 @@ class ApiService extends GetxService {
   static const String baseUrl = 'http://10.0.2.2/immo_api/api';
   // Android emulator → 10.0.2.2
   // iOS simulator   → localhost
-  // Device réel     → IP de ton PC (ex: 192.168.1.100)
+  // Device réel     → IP de ton PC (ex: 192.168.1.69)
 
   final StorageService _storage = Get.find<StorageService>();
 

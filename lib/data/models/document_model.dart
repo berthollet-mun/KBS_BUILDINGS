@@ -48,7 +48,7 @@ class DocumentModel {
 
   String get tailleFormatee {
     if (tailleFichier == null) return '';
-    if (tailleFichier! < 1024) return '${tailleFichier} B';
+    if (tailleFichier! < 1024) return '$tailleFichier B';
     if (tailleFichier! < 1024 * 1024) {
       return '${(tailleFichier! / 1024).toStringAsFixed(1)} KB';
     }

@@ -1,3 +1,5 @@
+// lib/core/services/auth_service.dart
+
 import 'package:get/get.dart';
 import '../../data/models/user_model.dart';
 import '../../data/responses/auth_response.dart';
@@ -19,7 +21,10 @@ class AuthService extends GetxService {
     });
 
     if (result.success && result.responseData != null) {
-      final authResponse = AuthResponse.fromJson(result.responseData);
+      // ✅ Cast explicite de dynamic → Map<String, dynamic>
+      final Map<String, dynamic> data =
+          result.responseData as Map<String, dynamic>;
+      final authResponse = AuthResponse.fromJson(data);
       await _storage.saveSession(
         token: authResponse.token,
         user: authResponse.user,
@@ -50,7 +55,10 @@ class AuthService extends GetxService {
     final result = await _api.post('/auth/register', body: body);
 
     if (result.success && result.responseData != null) {
-      final authResponse = AuthResponse.fromJson(result.responseData);
+      // ✅ Cast explicite
+      final Map<String, dynamic> data =
+          result.responseData as Map<String, dynamic>;
+      final authResponse = AuthResponse.fromJson(data);
       await _storage.saveSession(
         token: authResponse.token,
         user: authResponse.user,
@@ -76,7 +84,10 @@ class AuthService extends GetxService {
     final result = await _api.get('/me');
 
     if (result.success && result.responseData != null) {
-      final user = UserModel.fromJson(result.responseData);
+      // ✅ Cast explicite
+      final Map<String, dynamic> data =
+          result.responseData as Map<String, dynamic>;
+      final user = UserModel.fromJson(data);
       await _storage.saveUser(user);
     }
 
@@ -99,7 +110,10 @@ class AuthService extends GetxService {
     final result = await _api.put('/me', body: body);
 
     if (result.success && result.responseData != null) {
-      final user = UserModel.fromJson(result.responseData);
+      // ✅ Cast explicite
+      final Map<String, dynamic> data =
+          result.responseData as Map<String, dynamic>;
+      final user = UserModel.fromJson(data);
       await _storage.saveUser(user);
     }
 

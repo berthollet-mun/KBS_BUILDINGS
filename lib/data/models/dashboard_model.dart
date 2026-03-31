@@ -4,7 +4,7 @@ class DashboardModel {
   final DashboardContrats contrats;
   final List<DashboardEcheanceRetard> echeancesEnRetard;
   final DashboardMaintenance maintenance;
-  final int visitesplanifiees;
+  final int visitesPlanifiees;
   final List<DashboardBienRentable> topBiensRentables;
   final int notificationsNonLues;
 
@@ -14,7 +14,7 @@ class DashboardModel {
     required this.contrats,
     required this.echeancesEnRetard,
     required this.maintenance,
-    required this.visitesplanifiees,
+    required this.visitesPlanifiees,
     required this.topBiensRentables,
     required this.notificationsNonLues,
   });
@@ -30,7 +30,7 @@ class DashboardModel {
               .toList()
           : [],
       maintenance: DashboardMaintenance.fromJson(json['maintenance'] ?? {}),
-      visitesplanifiees: json['visites_planifiees'] ?? 0,
+      visitesPlanifiees: json['visites_planifiees'] ?? 0,
       topBiensRentables: json['top_biens_rentables'] != null
           ? (json['top_biens_rentables'] as List)
               .map((e) => DashboardBienRentable.fromJson(e))

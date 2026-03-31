@@ -1,73 +1,104 @@
+// lib/app/controllers/notification_controller.dart
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../core/services/notification_service.dart';
+import 'package:kbs/core/services/notification_service.dart';
+import '../../data/models/notification_model.dart';
 
 class NotificationController extends GetxController {
-  final NotificationAppService _service = Get.find<NotificationAppService>();
+  final NotificationAppService _service =
+      Get.find<NotificationAppService>();
 
-  final RxList<Map<String, dynamic>> notifications =
-      <Map<String, dynamic>>[].obs;
-  final RxInt unreadCount = 0.obs;
-
-  final RxBool isLoading = false.obs;
-  final RxString error = ''.obs;
+  // --- État ---
+  final isLoading = false.obs;
+  final errorMessage = ''.obs;
+  final RxList<NotificationModel> notificationsList =
+      <NotificationModel>[].obs;
+  final unreadCount = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
-    loadNotifications();
-    loadUnreadCount();
+    fetchNotifications();
+    fetchUnreadCount();
   }
 
-  Future<void> loadNotifications() async {
+  // ========== LISTE ==========
+
+  Future<void> fetchNotifications({int limit = 50}) async {
+    isLoading.value = true;
+    errorMessage.value = '';
+
     try {
-      isLoading.value = true;
-      error.value = '';
-
-      final result = await _service.getNotifications(limit: 50);
-
-      if (!result.success) {
-        error.value = result.message;
-        return;
-      }
-
-      final data = result.responseData;
-      if (data is List) {
-        notifications.assignAll(
-          data
-              .whereType<Map>()
-              .map((e) => Map<String, dynamic>.from(e))
-              .toList(),
-        );
+      final result = await _service.getNotifications(limit: limit);
+      if (result.success) {
+        notificationsList.value =
+            _service.parseNotifications(result);
+      } else {
+        errorMessage.value = result.message;
       }
     } catch (e) {
-      error.value = 'Erreur notifications: $e';
+      errorMessage.value =
+          "Erreur lors de la récupération des notifications.";
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> loadUnreadCount() async {
+  // ========== COMPTEUR NON LUES ==========
+
+  Future<void> fetchUnreadCount() async {
     try {
       final result = await _service.getUnreadCount();
-      if (result.success && result.responseData is Map) {
-        unreadCount.value = result.responseData['count'] ?? 0;
+      if (result.success) {
+        unreadCount.value = _service.parseUnreadCount(result);
       }
-    } catch (_) {}
+    } catch (_) {
+      // Silencieux
+    }
   }
+
+  // ========== MARQUER COMME LUE ==========
 
   Future<void> markAsRead(int id) async {
-    final result = await _service.markAsRead(id);
-    if (result.success) {
-      await loadNotifications();
-      await loadUnreadCount();
+    try {
+      final result = await _service.markAsRead(id);
+      if (result.success) {
+        // Met à jour localement
+        final index =
+            notificationsList.indexWhere((n) => n.id == id);
+        if (index != -1) {
+          // On force le refresh
+          fetchNotifications();
+        }
+        fetchUnreadCount();
+      }
+    } catch (_) {
+      // Silencieux
     }
   }
 
+  // ========== MARQUER TOUTES COMME LUES ==========
+
   Future<void> markAllAsRead() async {
-    final result = await _service.markAllAsRead();
-    if (result.success) {
-      await loadNotifications();
-      await loadUnreadCount();
+    try {
+      final result = await _service.markAllAsRead();
+      if (result.success) {
+        unreadCount.value = 0;
+        fetchNotifications();
+        Get.snackbar(
+          'Succès',
+          'Toutes les notifications ont été marquées comme lues',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+      }
+    } catch (_) {
+      Get.snackbar('Erreur', 'Impossible de marquer comme lues',
+          backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
+
+  // --- Getter ---
+  bool get hasUnread => unreadCount.value > 0;
 }
