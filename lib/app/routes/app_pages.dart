@@ -272,4 +272,10 @@ class AppPages {
       page: () => const RolesPage(),
     ),
   ];
+
+  //  ==================== DASHBOARD ====================
+  GetPage(
+  name: AppRoutes.dashboard,
+  page: () => const MainScaffold(),  // ← C'est le shell avec bottom nav
+),
 }

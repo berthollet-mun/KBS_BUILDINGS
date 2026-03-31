@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kbs/views/menu/menu_page.dart';
 import '../../../app/themes/app_theme.dart';
 import '../../dashboard/dashboard_page.dart';
 import '../../biens/biens_list_page.dart';
