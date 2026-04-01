@@ -17,54 +17,34 @@ class _SplashPageState extends State<SplashPage>
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  // Animation du logo
-  late AnimationController _logoController;
-  late Animation<double> _logoScale;
-  late Animation<double> _logoFade;
-
-  // Animation du texte
   late AnimationController _textController;
   late Animation<Offset> _textSlide;
   late Animation<double> _textFade;
 
-  // ═══════════════════════════════════════════
-  //  DONNÉES DES 5 SLIDES
-  // ═══════════════════════════════════════════
   final List<_SlideData> _slides = [
     _SlideData(
       image: 'assets/images/img1.png',
-      title: 'Gestion Immobilière\nIntelligente',
+      title: 'Gestion Immobilière',
       subtitle:
-          'Votre plateforme complète de gestion\ndes biens immobiliers',
-      icon: Icons.home_work_rounded,
+          'Votre plateforme de gestion\ndes biens immobiliers',
     ),
     _SlideData(
       image: 'assets/images/img2.png',
       title: 'Gestion des Biens',
       subtitle:
-          'Gérez villas, appartements et bureaux\nen toute simplicité',
-      icon: Icons.apartment_rounded,
+          'Gérez villas, appartements et\nbureaux en toute simplicité',
     ),
     _SlideData(
       image: 'assets/images/img3.png',
       title: 'Suivi des Loyers',
       subtitle:
-          'Suivez vos paiements et échéances\nen temps réel',
-      icon: Icons.payments_rounded,
+          'Suivez vos paiements et\néchéances en temps réel',
     ),
     _SlideData(
       image: 'assets/images/img4.png',
-      title: 'Maintenance\n& Visites',
-      subtitle:
-          'Planifiez les visites et gérez\nla maintenance efficacement',
-      icon: Icons.build_circle_rounded,
-    ),
-    _SlideData(
-      image: 'assets/images/img5.png',
       title: 'Commencez\nMaintenant',
       subtitle:
-          'Rejoignez KBS Building et simplifiez\nvotre gestion immobilière',
-      icon: Icons.rocket_launch_rounded,
+          'Rejoignez KBS Building et\nsimplifiez votre gestion immobilière',
     ),
   ];
 
@@ -72,33 +52,17 @@ class _SplashPageState extends State<SplashPage>
   void initState() {
     super.initState();
 
-    // ── Barre de statut transparente ──
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.black,
+        systemNavigationBarIconBrightness: Brightness.light,
       ),
     );
 
-    // ── Animation Logo ──
-    _logoController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1400),
-    );
-    _logoScale = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _logoController,
-        curve: Curves.elasticOut,
-      ),
-    );
-    _logoFade = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _logoController,
-        curve: const Interval(0.0, 0.4, curve: Curves.easeIn),
-      ),
-    );
-
-    // ── Animation Texte ──
     _textController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -107,44 +71,21 @@ class _SplashPageState extends State<SplashPage>
       begin: const Offset(0, 0.3),
       end: Offset.zero,
     ).animate(
-      CurvedAnimation(
-        parent: _textController,
-        curve: Curves.easeOut,
-      ),
+      CurvedAnimation(parent: _textController, curve: Curves.easeOut),
     );
     _textFade = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _textController,
-        curve: Curves.easeIn,
-      ),
+      CurvedAnimation(parent: _textController, curve: Curves.easeIn),
     );
 
-    // ── Lancer les animations ──
-    _logoController.forward();
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 300), () {
       if (mounted) _textController.forward();
     });
   }
 
-  // ═══════════════════════════════════════════
-  //  NAVIGATION
-  // ═══════════════════════════════════════════
   void _onPageChanged(int index) {
     setState(() => _currentPage = index);
-    // Rejouer l'animation du texte à chaque slide
     _textController.reset();
     _textController.forward();
-  }
-
-  void _nextPage() {
-    if (_currentPage < _slides.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-    } else {
-      _goToApp();
-    }
   }
 
   void _goToApp() {
@@ -159,200 +100,194 @@ class _SplashPageState extends State<SplashPage>
   @override
   void dispose() {
     _pageController.dispose();
-    _logoController.dispose();
     _textController.dispose();
     super.dispose();
   }
 
-  // ═══════════════════════════════════════════
-  //  BUILD PRINCIPAL
-  // ═══════════════════════════════════════════
   @override
   Widget build(BuildContext context) {
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final screenHeight = MediaQuery.of(context).size.height;
     final topPadding = MediaQuery.of(context).padding.top;
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          // ━━━ 1. PAGE VIEW (images de fond) ━━━
+          // ━━━ 1. PAGE VIEW ━━━
           PageView.builder(
             controller: _pageController,
             itemCount: _slides.length,
             onPageChanged: _onPageChanged,
-            itemBuilder: (context, index) =>
-                _buildBackground(_slides[index].image),
+            itemBuilder: (context, index) => Image.asset(
+              _slides[index].image,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
           ),
 
-          // ━━━ 2. OVERLAY GRADIENT BLEU ━━━
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  const Color(0xFF0D47A1).withOpacity(0.55),
-                  const Color(0xFF1565C0).withOpacity(0.20),
-                  Colors.black.withOpacity(0.25),
-                  Colors.black.withOpacity(0.80),
-                ],
-                stops: const [0.0, 0.30, 0.55, 1.0],
+          // ━━━ 2. GRADIENT PRINCIPAL ━━━
+          IgnorePointer(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    const Color(0xFF0D47A1).withOpacity(0.45),
+                    const Color(0xFF1565C0).withOpacity(0.15),
+                    Colors.black.withOpacity(0.20),
+                    Colors.black.withOpacity(0.75),
+                    Colors.black,  // ← NOIR TOTAL en bas
+                    Colors.black,  // ← NOIR TOTAL en bas
+                  ],
+                  stops: const [0.0, 0.25, 0.45, 0.72, 0.88, 1.0],
+                ),
               ),
             ),
           ),
 
-          // ━━━ 3. CONTENU ━━━
-          SafeArea(
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
+          // ━━━ 3. BANDE NOIRE EN BAS (couvre la nav bar) ━━━
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: bottomPadding + 20,
+            child: IgnorePointer(
+              child: Container(color: Colors.black),
+            ),
+          ),
 
-                // ── BOUTON PASSER (en haut à droite) ──
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: _currentPage < _slides.length - 1
-                      ? Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: TextButton(
-                            onPressed: _goToApp,
-                            style: TextButton.styleFrom(
-                              backgroundColor:
-                                  Colors.white.withOpacity(0.15),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 8,
+          // ━━━ 4. CONTENU ━━━
+          Positioned.fill(
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: topPadding,
+                bottom: bottomPadding + 10,
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 12),
+
+                  // ── BOUTON PASSER ──
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: _currentPage < _slides.length - 1
+                        ? Padding(
+                            padding: const EdgeInsets.only(right: 16),
+                            child: TextButton(
+                              onPressed: _goToApp,
+                              style: TextButton.styleFrom(
+                                backgroundColor:
+                                    Colors.white.withOpacity(0.15),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 8,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  side: BorderSide(
+                                    color: Colors.white.withOpacity(0.3),
+                                  ),
+                                ),
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                side: BorderSide(
-                                  color: Colors.white.withOpacity(0.3),
+                              child: const Text(
+                                'Passer',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
-                            child: const Text(
-                              'Passer',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
+                          )
+                        : const SizedBox(height: 40),
+                  ),
+
+                  // ── ESPACE ──
+                  const Spacer(),
+
+                  // ── TITRE ──
+                  IgnorePointer(
+                    child: SlideTransition(
+                      position: _textSlide,
+                      child: FadeTransition(
+                        opacity: _textFade,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 24),
+                          child: Text(
+                            _slides[_currentPage].title,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              height: 1.15,
+                              letterSpacing: 0.5,
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(0, 3),
+                                  blurRadius: 12,
+                                  color: Colors.black45,
+                                ),
+                              ],
                             ),
                           ),
-                        )
-                      : const SizedBox(height: 40),
-                ),
-
-                const SizedBox(height: 10),
-
-                // ── LOGO (img6.png) ──
-                AnimatedBuilder(
-                  animation: _logoController,
-                  builder: (context, child) {
-                    return Opacity(
-                      opacity: _logoFade.value,
-                      child: Transform.scale(
-                        scale: _logoScale.value,
-                        child: child,
+                        ),
                       ),
-                    );
-                  },
-                  child: Image.asset(
-                    'assets/images/img6.png',
-                    width: 130,
-                    height: 130,
-                  ),
-                ),
-
-                const Spacer(),
-
-                // ── ICÔNE DU SLIDE ──
-                AnimatedBuilder(
-                  animation: _textController,
-                  builder: (context, child) {
-                    return Opacity(
-                      opacity: _textFade.value,
-                      child: child,
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Icon(
-                      _slides[_currentPage].icon,
-                      size: 36,
-                      color: Colors.white,
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 24),
+                  const SizedBox(height: 16),
 
-                // ── TITRE ──
-                SlideTransition(
-                  position: _textSlide,
-                  child: FadeTransition(
-                    opacity: _textFade,
-                    child: Text(
-                      _slides[_currentPage].title,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        height: 1.15,
-                        letterSpacing: 0.5,
-                        shadows: [
-                          Shadow(
-                            offset: Offset(0, 3),
-                            blurRadius: 12,
-                            color: Colors.black45,
+                  // ── SOUS-TITRE ──
+                  IgnorePointer(
+                    child: FadeTransition(
+                      opacity: _textFade,
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 32),
+                        child: Text(
+                          _slides[_currentPage].subtitle,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white.withOpacity(0.85),
+                            height: 1.6,
+                            letterSpacing: 0.3,
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 16),
+                  const SizedBox(height: 40),
 
-                // ── SOUS-TITRE ──
-                FadeTransition(
-                  opacity: _textFade,
-                  child: Text(
-                    _slides[_currentPage].subtitle,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white.withOpacity(0.85),
-                      height: 1.6,
-                      letterSpacing: 0.3,
+                  // ── DOTS ──
+                  IgnorePointer(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        _slides.length,
+                        (i) => _buildDot(i),
+                      ),
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 50),
+                  const SizedBox(height: 24),
 
-                // ── INDICATEURS (DOTS) ──
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    _slides.length,
-                    (i) => _buildDot(i),
-                  ),
-                ),
+                  // ── BOUTON COMMENCER ──
+                  if (_currentPage == _slides.length - 1)
+                    _buildStartButton()
+                  else
+                    const SizedBox(height: 58),
 
-                const SizedBox(height: 30),
-
-                // ── BOUTON SUIVANT / COMMENCER ──
-                _currentPage == _slides.length - 1
-                    ? _buildStartButton()
-                    : _buildNextButton(),
-
-                SizedBox(height: bottomPadding + 20),
-              ],
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
           ),
         ],
@@ -360,21 +295,6 @@ class _SplashPageState extends State<SplashPage>
     );
   }
 
-  // ═══════════════════════════════════════════
-  //  WIDGETS HELPERS
-  // ═══════════════════════════════════════════
-
-  /// Image de fond plein écran
-  Widget _buildBackground(String imagePath) {
-    return Image.asset(
-      imagePath,
-      fit: BoxFit.cover,
-      width: double.infinity,
-      height: double.infinity,
-    );
-  }
-
-  /// Point indicateur de page
   Widget _buildDot(int index) {
     final isActive = _currentPage == index;
     return AnimatedContainer(
@@ -400,45 +320,6 @@ class _SplashPageState extends State<SplashPage>
     );
   }
 
-  /// Bouton flèche "Suivant"
-  Widget _buildNextButton() {
-    return GestureDetector(
-      onTap: _nextPage,
-      child: Container(
-        width: 68,
-        height: 68,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withOpacity(0.25),
-              Colors.white.withOpacity(0.10),
-            ],
-          ),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.5),
-            width: 2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: const Icon(
-          Icons.arrow_forward_rounded,
-          color: Colors.white,
-          size: 30,
-        ),
-      ),
-    );
-  }
-
-  /// Bouton "Commencer" (dernier slide)
   Widget _buildStartButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -477,19 +358,14 @@ class _SplashPageState extends State<SplashPage>
   }
 }
 
-// ═══════════════════════════════════════════
-//  MODÈLE DE DONNÉES DU SLIDE
-// ═══════════════════════════════════════════
 class _SlideData {
   final String image;
   final String title;
   final String subtitle;
-  final IconData icon;
 
   _SlideData({
     required this.image,
     required this.title,
     required this.subtitle,
-    required this.icon,
   });
 }
