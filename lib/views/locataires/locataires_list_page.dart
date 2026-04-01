@@ -73,7 +73,7 @@ class LocatairesListPage extends StatelessWidget {
                           backgroundColor: AppTheme.accentColor.withOpacity(0.1),
                           radius: 25,
                           child: Text(
-                            l.nomComplet?.substring(0, 1).toUpperCase() ?? '?',
+                            l.nomComplet.substring(0, 1).toUpperCase() ?? '?',
                             style: const TextStyle(
                               color: AppTheme.accentColor,
                               fontWeight: FontWeight.bold,

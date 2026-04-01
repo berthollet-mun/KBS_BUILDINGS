@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../app/controllers/echeance_controller.dart';
+import 'package:kbs/controllers/echeance_controller.dart';
 import '../../app/themes/app_theme.dart';
 import '../shared/widgets/loading_widget.dart';
 import '../shared/widgets/empty_state.dart';
@@ -29,7 +29,7 @@ class EcheancesAVenirPage extends StatelessWidget {
               const SizedBox(width: 16),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(e.dateEcheance ?? '', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
-                Text('${e.montantAttendu?.toStringAsFixed(0) ?? '0'} USD', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+                Text('${e.montantAttendu.toStringAsFixed(0) ?? '0'} USD', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
               ])),
             ]),
           );

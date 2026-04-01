@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../app/controllers/echeance_controller.dart';
+import 'package:kbs/controllers/echeance_controller.dart';
 import '../../app/themes/app_theme.dart';
 import '../shared/widgets/loading_widget.dart';
 import '../shared/widgets/empty_state.dart';
@@ -36,8 +36,8 @@ class EcheancesListPage extends StatelessWidget {
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(e.dateEcheance ?? '', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
                   const SizedBox(height: 4),
-                  Text('Attendu: ${e.montantAttendu?.toStringAsFixed(0) ?? '0'} USD', style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
-                  if (e.montantPaye != null && e.montantPaye! > 0) Text('Payé: ${e.montantPaye?.toStringAsFixed(0)} USD', style: const TextStyle(fontSize: 13, color: AppTheme.successColor)),
+                  Text('Attendu: ${e.montantAttendu.toStringAsFixed(0) ?? '0'} USD', style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+                  if (e.montantPaye > 0) Text('Payé: ${e.montantPaye.toStringAsFixed(0)} USD', style: const TextStyle(fontSize: 13, color: AppTheme.successColor)),
                 ])),
                 StatusBadge(label: AppTheme.getStatutEcheanceLabel(e.statut), color: AppTheme.getStatutEcheanceColor(e.statut)),
               ]),

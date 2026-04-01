@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../app/controllers/user_controller.dart';
-import '../../app/controllers/role_controller.dart';
+import 'package:kbs/controllers/role_controller.dart';
+import 'package:kbs/controllers/user_controller.dart';
 import '../../app/themes/app_theme.dart';
 
 class UserFormPage extends StatelessWidget {
@@ -34,9 +34,9 @@ class UserFormPage extends StatelessWidget {
         ],
         const Text('Rôle et statut', style: AppTheme.headline3),
         const SizedBox(height: 12),
-        Obx(() => DropdownButtonFormField<int>(value: ctrl.formRoleId.value, decoration: const InputDecoration(labelText: 'Rôle *', prefixIcon: Icon(Icons.security)), items: roleCtrl.rolesList.map((r) => DropdownMenuItem(value: r.id, child: Text(r.nom ?? ''))).toList(), onChanged: (v) => ctrl.formRoleId.value = v, validator: (v) => v == null ? 'Sélectionnez un rôle' : null)),
+        Obx(() => DropdownButtonFormField<int>(initialValue: ctrl.formRoleId.value, decoration: const InputDecoration(labelText: 'Rôle *', prefixIcon: Icon(Icons.security)), items: roleCtrl.rolesList.map((r) => DropdownMenuItem(value: r.id, child: Text(r.nom ?? ''))).toList(), onChanged: (v) => ctrl.formRoleId.value = v, validator: (v) => v == null ? 'Sélectionnez un rôle' : null)),
         const SizedBox(height: 16),
-        Obx(() => DropdownButtonFormField<String>(value: ctrl.formStatut.value, decoration: const InputDecoration(labelText: 'Statut', prefixIcon: Icon(Icons.toggle_on)), items: ctrl.statuts.map((s) => DropdownMenuItem(value: s, child: Text(s.capitalizeFirst!))).toList(), onChanged: (v) => ctrl.formStatut.value = v ?? 'actif')),
+        Obx(() => DropdownButtonFormField<String>(initialValue: ctrl.formStatut.value, decoration: const InputDecoration(labelText: 'Statut', prefixIcon: Icon(Icons.toggle_on)), items: ctrl.statuts.map((s) => DropdownMenuItem(value: s, child: Text(s.capitalizeFirst!))).toList(), onChanged: (v) => ctrl.formStatut.value = v ?? 'actif')),
         const SizedBox(height: 40),
         Obx(() => SizedBox(width: double.infinity, height: 56, child: ElevatedButton.icon(onPressed: ctrl.isSaving.value ? null : () => isEditing ? ctrl.updateUser(Get.arguments ?? 0) : ctrl.createUser(), icon: ctrl.isSaving.value ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) : Icon(isEditing ? Icons.save : Icons.person_add), label: Text(isEditing ? 'Enregistrer' : 'Créer l\'Utilisateur', style: const TextStyle(fontSize: 16))))),
         const SizedBox(height: 20),

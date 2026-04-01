@@ -49,7 +49,7 @@ class BienFormPage extends StatelessWidget {
 
               // Type de bien
               Obx(() => DropdownButtonFormField<String>(
-                    value: controller.selectedFormTypeBien.value,
+                    initialValue: controller.selectedFormTypeBien.value,
                     decoration: const InputDecoration(
                       labelText: 'Type de bien *',
                       prefixIcon: Icon(Icons.category),
@@ -78,7 +78,7 @@ class BienFormPage extends StatelessWidget {
 
               // Propriétaire
               Obx(() => DropdownButtonFormField<int>(
-                    value: controller.formProprietaireId.value,
+                    initialValue: controller.formProprietaireId.value,
                     decoration: const InputDecoration(
                       labelText: 'Propriétaire *',
                       prefixIcon: Icon(Icons.person),

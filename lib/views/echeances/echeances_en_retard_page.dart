@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../app/controllers/echeance_controller.dart';
+import 'package:kbs/controllers/echeance_controller.dart';
 import '../../app/themes/app_theme.dart';
 import '../shared/widgets/loading_widget.dart';
 import '../shared/widgets/empty_state.dart';
@@ -34,7 +34,7 @@ class EcheancesEnRetardPage extends StatelessWidget {
                 Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), decoration: BoxDecoration(color: AppTheme.errorColor, borderRadius: BorderRadius.circular(12)), child: Text('${e.joursRetard ?? 0} jours', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600))),
               ]),
               const SizedBox(height: 8),
-              Text('Montant: ${e.montantAttendu?.toStringAsFixed(0) ?? '0'} USD', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.errorColor)),
+              Text('Montant: ${e.montantAttendu.toStringAsFixed(0) ?? '0'} USD', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.errorColor)),
               const SizedBox(height: 8),
               Row(children: [
                 Expanded(child: ElevatedButton.icon(onPressed: () => Get.toNamed('/paiement-create'), icon: const Icon(Icons.payment, size: 18), label: const Text('Payer'), style: ElevatedButton.styleFrom(backgroundColor: AppTheme.successColor))),

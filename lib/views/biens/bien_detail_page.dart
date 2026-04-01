@@ -63,7 +63,7 @@ class BienDetailPage extends StatelessWidget {
                             apiService
                                 .getFileUrl(bien.photoPrincipale),
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) =>
+                            errorBuilder: (_, _, _) =>
                                 _buildImagePlaceholder(bien.typeBien),
                           )
                         : _buildImagePlaceholder(bien.typeBien),

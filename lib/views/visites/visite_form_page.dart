@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../app/controllers/visite_controller.dart';
-import '../../app/controllers/bien_controller.dart';
+import 'package:kbs/controllers/bien_controller.dart';
+import 'package:kbs/controllers/visite_controller.dart';
 import '../../app/themes/app_theme.dart';
 
 class VisiteFormPage extends StatelessWidget {
@@ -20,7 +20,7 @@ class VisiteFormPage extends StatelessWidget {
         const SizedBox(height: 24),
         const Text('Bien à visiter', style: AppTheme.headline3),
         const SizedBox(height: 12),
-        Obx(() => DropdownButtonFormField<int>(value: ctrl.formBienId.value, decoration: const InputDecoration(labelText: 'Sélectionner un bien *', prefixIcon: Icon(Icons.apartment)), items: bienCtrl.biensList.map((b) => DropdownMenuItem(value: b.id, child: Text(b.titre ?? ''))).toList(), onChanged: (v) => ctrl.formBienId.value = v, validator: (v) => v == null ? 'Requis' : null)),
+        Obx(() => DropdownButtonFormField<int>(initialValue: ctrl.formBienId.value, decoration: const InputDecoration(labelText: 'Sélectionner un bien *', prefixIcon: Icon(Icons.apartment)), items: bienCtrl.biensList.map((b) => DropdownMenuItem(value: b.id, child: Text(b.titre ?? ''))).toList(), onChanged: (v) => ctrl.formBienId.value = v, validator: (v) => v == null ? 'Requis' : null)),
         const SizedBox(height: 24),
         const Text('Vos informations', style: AppTheme.headline3),
         const SizedBox(height: 12),

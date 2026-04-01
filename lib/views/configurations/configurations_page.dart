@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../app/controllers/configuration_controller.dart';
+import 'package:kbs/controllers/configuration_controller.dart';
 import '../../app/themes/app_theme.dart';
 import '../shared/widgets/loading_widget.dart';
 

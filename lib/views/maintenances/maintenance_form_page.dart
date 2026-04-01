@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../app/controllers/maintenance_controller.dart';
-import '../../app/controllers/bien_controller.dart';
+import 'package:kbs/controllers/bien_controller.dart';
+import 'package:kbs/controllers/maintenance_controller.dart';
 import '../../app/themes/app_theme.dart';
 
 class MaintenanceFormPage extends StatelessWidget {
@@ -22,7 +22,7 @@ class MaintenanceFormPage extends StatelessWidget {
         const Text('Bien concerné', style: AppTheme.headline3),
         const SizedBox(height: 12),
         Obx(() => DropdownButtonFormField<int>(
-              value: ctrl.formBienId.value,
+              initialValue: ctrl.formBienId.value,
               decoration: const InputDecoration(labelText: 'Sélectionner un bien *', prefixIcon: Icon(Icons.apartment)),
               items: bienCtrl.biensList.map((b) => DropdownMenuItem(value: b.id, child: Text('${b.codeBien ?? ''} - ${b.titre ?? ''}'))).toList(),
               onChanged: (v) => ctrl.formBienId.value = v,

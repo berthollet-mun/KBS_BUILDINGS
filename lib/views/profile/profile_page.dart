@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../app/controllers/auth_controller.dart';
+import 'package:kbs/controllers/auth_controller.dart';
 import '../../app/themes/app_theme.dart';
 
 class ProfilePage extends StatelessWidget {

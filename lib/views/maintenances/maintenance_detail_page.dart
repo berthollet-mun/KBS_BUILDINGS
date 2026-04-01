@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../app/controllers/maintenance_controller.dart';
+import 'package:kbs/controllers/maintenance_controller.dart';
 import '../../app/themes/app_theme.dart';
 import '../shared/widgets/loading_widget.dart';
 import '../shared/widgets/status_badge.dart';

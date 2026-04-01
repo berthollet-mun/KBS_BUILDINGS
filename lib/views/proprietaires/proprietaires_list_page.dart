@@ -89,7 +89,7 @@ class ProprietairesListPage extends StatelessWidget {
                                 AppTheme.primaryColor.withOpacity(0.1),
                             radius: 25,
                             child: Text(
-                              p.nomComplet?.substring(0, 1).toUpperCase() ?? '?',
+                              p.nomComplet.substring(0, 1).toUpperCase() ?? '?',
                               style: const TextStyle(
                                 color: AppTheme.primaryColor,
                                 fontWeight: FontWeight.bold,

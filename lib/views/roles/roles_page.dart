@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../app/controllers/role_controller.dart';
+import 'package:kbs/controllers/role_controller.dart';
 import '../../app/themes/app_theme.dart';
 import '../shared/widgets/loading_widget.dart';
 
@@ -21,7 +21,7 @@ class RolesPage extends StatelessWidget {
           return Container(margin: const EdgeInsets.only(bottom: 10), decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(16)),
             child: ListTile(
               leading: Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: AppTheme.primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(10)), child: const Icon(Icons.security, color: AppTheme.primaryColor)),
-              title: Text(r.nom?.capitalizeFirst ?? '', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+              title: Text(r.nom.capitalizeFirst ?? '', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
               subtitle: Text(r.description ?? '', style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
             ));
         });

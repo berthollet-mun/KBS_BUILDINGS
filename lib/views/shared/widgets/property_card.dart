@@ -51,7 +51,7 @@ class PropertyCard extends StatelessWidget {
                     ? Image.network(
                         apiService.getFileUrl(bien.photoPrincipale),
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) =>
+                        errorBuilder: (_, _, _) =>
                             _buildPlaceholder(),
                       )
                     : _buildPlaceholder(),

@@ -6,7 +6,7 @@ import 'storage_service.dart';
 
 class ApiService extends GetxService {
   // ✅ CHANGE CETTE URL SELON TON ENVIRONNEMENT
-  static const String baseUrl = 'http://10.0.2.2/immo_api/api';
+  static const String baseUrl = 'http://192.168.1.69/immo_api/api';
   // Android emulator → 10.0.2.2
   // iOS simulator   → localhost
   // Device réel     → IP de ton PC (ex: 192.168.1.69)

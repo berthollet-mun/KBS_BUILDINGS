@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../app/controllers/contrat_controller.dart';
+import 'package:kbs/controllers/contrat_controller.dart';
 import '../../app/themes/app_theme.dart';
 import '../shared/widgets/loading_widget.dart';
 import '../shared/widgets/empty_state.dart';
@@ -63,7 +63,7 @@ class ContratsListPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(c.numeroContrat ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                                StatusBadge(label: c.statut?.toUpperCase() ?? '', color: AppTheme.getStatutContratColor(c.statut)),
+                                StatusBadge(label: c.statut.toUpperCase() ?? '', color: AppTheme.getStatutContratColor(c.statut)),
                               ],
                             ),
                             const SizedBox(height: 12),
@@ -88,7 +88,7 @@ class ContratsListPage extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('${c.montantLoyer?.toStringAsFixed(0) ?? '0'} USD/mois', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+                                Text('${c.montantLoyer.toStringAsFixed(0) ?? '0'} USD/mois', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
                                 TextButton(onPressed: () => Get.toNamed('/contrat-detail', arguments: c.id), child: const Text('Voir détails →')),
                               ],
                             ),

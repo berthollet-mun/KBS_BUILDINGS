@@ -95,7 +95,7 @@ class ProprietaireDetailPage extends StatelessWidget {
                       radius: 45,
                       backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
                       child: Text(
-                        p.nomComplet?.substring(0, 1).toUpperCase() ?? '?',
+                        p.nomComplet.substring(0, 1).toUpperCase() ?? '?',
                         style: const TextStyle(
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
