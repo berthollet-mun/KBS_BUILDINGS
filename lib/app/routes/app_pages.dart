@@ -11,10 +11,12 @@ import '../../views/public/welcome/welcome_page.dart';
 import '../../views/auth/login/login_page.dart';
 import '../../views/auth/register/register_page.dart';
 import '../../views/dashboard/dashboard_page.dart';
+import '../../views/dashboard/dashboard_stats_page.dart';
 import '../../views/biens/biens_list_page.dart';
 import '../../views/biens/biens_disponibles_page.dart';
 import '../../views/biens/bien_detail_page.dart';
 import '../../views/biens/bien_form_page.dart';
+import '../../views/biens/carte_biens_page.dart';
 import '../../views/proprietaires/proprietaires_list_page.dart';
 import '../../views/proprietaires/proprietaire_detail_page.dart';
 import '../../views/proprietaires/proprietaire_form_page.dart';
@@ -76,6 +78,12 @@ class AppPages {
       page: () => const DashboardPage(),
     ),
 
+    // ==================== DASHBOARD STATS ====================
+    GetPage(
+      name: AppRoutes.dashboardStats,
+      page: () => const DashboardStatsPage(),
+    ),
+
     // ==================== BIENS ====================
     GetPage(
       name: AppRoutes.biensList,
@@ -92,6 +100,10 @@ class AppPages {
     GetPage(
       name: AppRoutes.bienCreate,
       page: () => const BienFormPage(isEditing: false),
+    ),
+    GetPage(
+      name: AppRoutes.carteBiens,
+      page: () => const CarteBiensPage(),
     ),
     GetPage(
       name: AppRoutes.bienEdit,

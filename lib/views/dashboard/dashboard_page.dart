@@ -2,11 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:kbs/controllers/auth_controller.dart';
 import 'package:kbs/controllers/dashboard_controller.dart';
 import '../../app/themes/app_theme.dart';
-import '../shared/widgets/stat_card.dart';
-import '../shared/widgets/section_header.dart';
 import '../shared/widgets/loading_widget.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -30,14 +29,24 @@ class DashboardPage extends StatelessWidget {
             slivers: [
               // ===== APP BAR =====
               SliverAppBar(
-                expandedHeight: 100,
+                expandedHeight: 110,
                 floating: true,
                 pinned: true,
                 backgroundColor: AppTheme.primaryColor,
                 automaticallyImplyLeading: false,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
-                    padding: const EdgeInsets.fromLTRB(20, 50, 20, 10),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF1A3C6E),
+                          Color(0xFF2B5EA7),
+                        ],
+                      ),
+                    ),
+                    padding: const EdgeInsets.fromLTRB(20, 50, 20, 12),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -67,19 +76,24 @@ class DashboardPage extends StatelessWidget {
                         // Notification bell
                         Stack(
                           children: [
-                            IconButton(
-                              onPressed: () =>
-                                  Get.toNamed('/notifications'),
-                              icon: const Icon(
-                                Icons.notifications_outlined,
-                                color: Colors.white,
-                                size: 28,
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: IconButton(
+                                onPressed: () => Get.toNamed('/notifications'),
+                                icon: const Icon(
+                                  Icons.notifications_outlined,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
                               ),
                             ),
                             if (dashCtrl.notificationsNonLues > 0)
                               Positioned(
-                                right: 8,
-                                top: 8,
+                                right: 6,
+                                top: 6,
                                 child: Container(
                                   padding: const EdgeInsets.all(4),
                                   decoration: const BoxDecoration(
@@ -111,25 +125,25 @@ class DashboardPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ===== STAT CARDS (2x2) =====
+                      // ===== 4 STAT CARDS (2x2) =====
                       Row(
                         children: [
                           Expanded(
-                            child: StatCard(
+                            child: _buildStatCard(
                               value: '${dashCtrl.totalBiens}',
                               label: 'Biens Locatifs',
-                              color: AppTheme.statCardBlue,
-                              icon: Icons.apartment,
+                              color: const Color(0xFF1A3C6E),
+                              icon: Icons.apartment_rounded,
                               onTap: () => Get.toNamed('/biens'),
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: StatCard(
+                            child: _buildStatCard(
                               value: '${dashCtrl.biensOccupes}',
                               label: 'Locataires',
-                              color: AppTheme.successColor,
-                              icon: Icons.people,
+                              color: const Color(0xFF27AE60),
+                              icon: Icons.people_rounded,
                               onTap: () => Get.toNamed('/locataires'),
                             ),
                           ),
@@ -139,23 +153,21 @@ class DashboardPage extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: StatCard(
-                              value:
-                                  '${dashCtrl.tauxOccupation.toStringAsFixed(0)}%',
+                            child: _buildStatCard(
+                              value: '${dashCtrl.tauxOccupation.toStringAsFixed(0)}%',
                               label: "Taux d'Occupation",
-                              color: AppTheme.statCardOrange,
-                              icon: Icons.trending_up,
+                              color: const Color(0xFFF39C12),
+                              icon: Icons.trending_up_rounded,
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: StatCard(
+                            child: _buildStatCard(
                               value: '${dashCtrl.ticketsEnAttente + dashCtrl.ticketsEnCours}',
                               label: 'Pannes Actives',
-                              color: AppTheme.statCardRed,
-                              icon: Icons.build,
-                              onTap: () =>
-                                  Get.toNamed('/maintenances'),
+                              color: const Color(0xFFE74C3C),
+                              icon: Icons.build_rounded,
+                              onTap: () => Get.toNamed('/maintenances'),
                             ),
                           ),
                         ],
@@ -163,35 +175,49 @@ class DashboardPage extends StatelessWidget {
 
                       const SizedBox(height: 24),
 
-                      // ===== REVENUS & DÉPENSES =====
-                      SectionHeader(
-                        title: 'Revenus & Dépenses',
-                        trailing: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: AppTheme.primaryColor
-                                .withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Text(
-                            'Ce mois',
+                      // ===== REVENUS & DÉPENSES AVEC GRAPHIQUE =====
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Revenus & Dépenses',
                             style: TextStyle(
-                              color: AppTheme.primaryColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: AppTheme.textPrimary,
                             ),
                           ),
-                        ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: AppTheme.primaryColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Text(
+                              'Ce mois',
+                              style: TextStyle(
+                                color: AppTheme.primaryColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      _buildRevenueCard(dashCtrl),
+                      const SizedBox(height: 16),
+                      _buildRevenueChart(dashCtrl),
 
                       const SizedBox(height: 24),
 
                       // ===== ACTIONS RAPIDES =====
                       const Text(
                         'Actions rapides',
-                        style: AppTheme.headline3,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.textPrimary,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       _buildQuickActions(),
@@ -200,11 +226,29 @@ class DashboardPage extends StatelessWidget {
 
                       // ===== ÉCHÉANCES EN RETARD =====
                       if (dashCtrl.totalEcheancesEnRetard > 0) ...[
-                        SectionHeader(
-                          title: 'Échéances en retard',
-                          actionText: 'Voir tout',
-                          onActionTap: () =>
-                              Get.toNamed('/echeances-en-retard'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Échéances en retard',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () =>
+                                  Get.toNamed('/echeances-en-retard'),
+                              child: const Text(
+                                'Voir tout',
+                                style: TextStyle(
+                                  color: AppTheme.primaryColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         ...dashCtrl.echeancesEnRetard
                             .take(3)
@@ -224,7 +268,91 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildRevenueCard(DashboardController ctrl) {
+  // ── STAT CARD ──
+  Widget _buildStatCard({
+    required String value,
+    required String label,
+    required Color color,
+    required IconData icon,
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.35),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    value,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white.withOpacity(0.85),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icon, color: Colors.white, size: 22),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── REVENUE CHART ──
+  Widget _buildRevenueChart(DashboardController ctrl) {
+    final months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun'];
+    final historique = ctrl.historiqueMensuel;
+
+    // Build bar data from historique
+    List<double> values = [];
+    for (int i = 0; i < 6; i++) {
+      if (i < historique.length) {
+        values.add(historique[i].totalEncaisse);
+      } else {
+        values.add(0);
+      }
+    }
+    // If all zeros, use some dummy data for visual
+    if (values.every((v) => v == 0)) {
+      values = [0, 0, 0, 0, 0, 0];
+    }
+
+    final maxVal = values.reduce((a, b) => a > b ? a : b);
+    final maxY = maxVal > 0 ? maxVal * 1.3 : 100.0;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -240,6 +368,7 @@ class DashboardPage extends StatelessWidget {
       ),
       child: Column(
         children: [
+          // Revenue summary row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -257,7 +386,7 @@ class DashboardPage extends StatelessWidget {
                   Text(
                     '${ctrl.revenusMoisCourant.toStringAsFixed(0)} USD',
                     style: const TextStyle(
-                      fontSize: 24,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: AppTheme.primaryColor,
                     ),
@@ -271,24 +400,80 @@ class DashboardPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
-                  Icons.trending_up,
+                  Icons.trending_up_rounded,
                   color: AppTheme.successColor,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          // Barre de progression simple
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: ctrl.tauxOccupation / 100,
-              backgroundColor: Colors.grey[200],
-              color: AppTheme.primaryColor,
-              minHeight: 6,
+          const SizedBox(height: 20),
+          // Bar chart
+          SizedBox(
+            height: 160,
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: maxY,
+                barTouchData: BarTouchData(enabled: false),
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) {
+                        final idx = value.toInt();
+                        if (idx >= 0 && idx < months.length) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              months[idx],
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: AppTheme.textSecondary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                      reservedSize: 30,
+                    ),
+                  ),
+                  leftTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+                gridData: const FlGridData(show: false),
+                borderData: FlBorderData(show: false),
+                barGroups: List.generate(6, (i) {
+                  return BarChartGroupData(
+                    x: i,
+                    barRods: [
+                      BarChartRodData(
+                        toY: values[i],
+                        color: i == 5
+                            ? AppTheme.primaryColor
+                            : AppTheme.primaryColor.withOpacity(0.4),
+                        width: 20,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(6),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
+          // Summary row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -318,38 +503,45 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
+  // ── QUICK ACTIONS GRID ──
   Widget _buildQuickActions() {
     final actions = [
       _QuickAction(
-          icon: Icons.apartment,
-          label: 'Mes Biens',
-          color: AppTheme.primaryColor,
-          route: '/biens'),
+        icon: Icons.apartment_rounded,
+        label: 'Mes Biens',
+        color: const Color(0xFF1A3C6E),
+        route: '/biens',
+      ),
       _QuickAction(
-          icon: Icons.payments,
-          label: 'Loyers',
-          color: AppTheme.successColor,
-          route: '/paiements'),
+        icon: Icons.payments_rounded,
+        label: 'Loyers',
+        color: const Color(0xFF27AE60),
+        route: '/paiements',
+      ),
       _QuickAction(
-          icon: Icons.map,
-          label: 'Carte',
-          color: AppTheme.infoColor,
-          route: '/biens'),
+        icon: Icons.map_rounded,
+        label: 'Carte',
+        color: const Color(0xFF3498DB),
+        route: '/carte-biens',
+      ),
       _QuickAction(
-          icon: Icons.qr_code_scanner,
-          label: 'QR Code',
-          color: AppTheme.accentColor,
-          route: '/qr-scan'),
+        icon: Icons.qr_code_scanner_rounded,
+        label: 'QR Code',
+        color: const Color(0xFFF39C12),
+        route: '/qr-scan',
+      ),
       _QuickAction(
-          icon: Icons.build,
-          label: 'Maintenance',
-          color: AppTheme.warningColor,
-          route: '/maintenances'),
+        icon: Icons.build_rounded,
+        label: 'Maintenance',
+        color: const Color(0xFFE67E22),
+        route: '/maintenances',
+      ),
       _QuickAction(
-          icon: Icons.bar_chart,
-          label: 'Rapports',
-          color: AppTheme.primaryLight,
-          route: '/dashboard'),
+        icon: Icons.bar_chart_rounded,
+        label: 'Rapports',
+        color: const Color(0xFF9B59B6),
+        route: '/dashboard-stats',
+      ),
     ];
 
     return GridView.builder(
@@ -357,7 +549,7 @@ class DashboardPage extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        childAspectRatio: 1.1,
+        childAspectRatio: 1.05,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
@@ -395,7 +587,8 @@ class DashboardPage extends StatelessWidget {
                   action.label,
                   style: const TextStyle(
                     fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textPrimary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -407,30 +600,38 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
+  // ── RETARD CARD ──
   Widget _buildRetardCard(dynamic echeance) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         border: const Border(
-        left: BorderSide(
-        color: AppTheme.errorColor,
-        width: 3,
-  ),
-),
+          left: BorderSide(
+            color: AppTheme.errorColor,
+            width: 4,
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: AppTheme.errorColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.warning_amber,
-                color: AppTheme.errorColor, size: 20),
+            child: const Icon(Icons.warning_amber_rounded,
+                color: AppTheme.errorColor, size: 22),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -444,6 +645,7 @@ class DashboardPage extends StatelessWidget {
                     fontSize: 14,
                   ),
                 ),
+                const SizedBox(height: 2),
                 Text(
                   '${echeance.codeBien} • ${echeance.joursRetard} jours de retard',
                   style: const TextStyle(
@@ -454,12 +656,25 @@ class DashboardPage extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            '${echeance.resteAPayer?.toStringAsFixed(0) ?? '0'} USD',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: AppTheme.errorColor,
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '${echeance.resteAPayer?.toStringAsFixed(0) ?? '0'}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.errorColor,
+                  fontSize: 16,
+                ),
+              ),
+              const Text(
+                'USD',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: AppTheme.textSecondary,
+                ),
+              ),
+            ],
           ),
         ],
       ),

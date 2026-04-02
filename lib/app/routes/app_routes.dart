@@ -9,6 +9,7 @@ class AppRoutes {
 
   // --- Dashboard ---
   static const String dashboard = '/dashboard';
+  static const String dashboardStats = '/dashboard-stats';
 
   // --- Biens ---
   static const String biensList = '/biens';
@@ -16,6 +17,7 @@ class AppRoutes {
   static const String bienDetail = '/bien-detail';
   static const String bienCreate = '/bien-create';
   static const String bienEdit = '/bien-edit';
+  static const String carteBiens = '/carte-biens';
 
   // --- Propriétaires ---
   static const String proprietairesList = '/proprietaires';

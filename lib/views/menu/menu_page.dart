@@ -17,7 +17,10 @@ class MenuPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Menu'),
+        backgroundColor: AppTheme.primaryColor,
+        foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
+        elevation: 0,
         actions: [
           Stack(
             children: [
@@ -36,8 +39,7 @@ class MenuPage extends StatelessWidget {
                   ),
                   child: const Text(
                     '2',
-                    style: TextStyle(
-                        color: Colors.white, fontSize: 10),
+                    style: TextStyle(color: Colors.white, fontSize: 10),
                   ),
                 ),
               ),
@@ -50,20 +52,29 @@ class MenuPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Profil utilisateur
+            // ── PROFIL UTILISATEUR ──
             Obx(() => Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: const [AppTheme.cardShadow],
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF1A3C6E), Color(0xFF2B5EA7)],
+                    ),
+                    borderRadius: BorderRadius.circular(18),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.primaryColor.withOpacity(0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: Row(
                     children: [
                       CircleAvatar(
                         radius: 30,
-                        backgroundColor:
-                            AppTheme.primaryColor.withOpacity(0.1),
+                        backgroundColor: Colors.white.withOpacity(0.2),
                         child: Text(
                           authCtrl.currentUser.value?.nom
                                   .substring(0, 1)
@@ -72,46 +83,65 @@ class MenuPage extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.primaryColor,
+                            color: Colors.white,
                           ),
                         ),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               authCtrl.userFullName,
                               style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
                               ),
                             ),
                             const SizedBox(height: 2),
-                            Text(
-                              authCtrl.userRole.capitalizeFirst ??
-                                  '',
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: AppTheme.primaryColor,
-                                fontWeight: FontWeight.w500,
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                authCtrl.userRole.capitalizeFirst ?? '',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white.withOpacity(0.9),
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
+                            const SizedBox(height: 4),
                             Text(
                               'KBS BUILDING',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: AppTheme.textSecondary,
+                                color: Colors.white.withOpacity(0.6),
+                                letterSpacing: 1,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      IconButton(
-                        onPressed: () => Get.toNamed('/profile'),
-                        icon: const Icon(Icons.chevron_right),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: IconButton(
+                          onPressed: () => Get.toNamed('/profile'),
+                          icon: const Icon(Icons.chevron_right,
+                              color: Colors.white),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
                       ),
                     ],
                   ),
@@ -119,33 +149,45 @@ class MenuPage extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // ACCÈS RAPIDE
+            // ── ACCÈS RAPIDE ──
             _sectionTitle('ACCÈS RAPIDE'),
-            _menuItem(Icons.apartment, 'Mes Biens', '/biens'),
-            _menuItem(Icons.payments, 'Suivi des Loyers', '/paiements'),
-            _menuItem(Icons.map, 'Carte des Biens', '/biens'),
-            _menuItem(Icons.qr_code_scanner, 'Scanner QR Code', '/qr-scan'),
-            _menuItem(Icons.build, 'Maintenance & Pannes', '/maintenances'),
-            _menuItem(Icons.dashboard, 'Tableau de Bord', '/dashboard'),
+            _menuItem(Icons.apartment_rounded, 'Mes Biens', '/biens',
+                AppTheme.primaryColor),
+            _menuItem(Icons.payments_rounded, 'Suivi des Loyers',
+                '/paiements', AppTheme.successColor),
+            _menuItem(Icons.map_rounded, 'Carte des Biens',
+                '/carte-biens', AppTheme.infoColor),
+            _menuItem(Icons.qr_code_scanner_rounded, 'Scanner QR Code',
+                '/qr-scan', AppTheme.warningColor),
+            _menuItem(Icons.build_rounded, 'Maintenance & Pannes',
+                '/maintenances', AppTheme.maintenanceColor),
+            _menuItem(Icons.bar_chart_rounded, 'Tableau de Bord',
+                '/dashboard-stats', const Color(0xFF9B59B6)),
 
             const SizedBox(height: 20),
 
-            // GESTION
+            // ── GESTION ──
             if (authCtrl.isAdminOrAgent) ...[
               _sectionTitle('GESTION'),
-              _menuItem(Icons.person, 'Propriétaires', '/proprietaires'),
-              _menuItem(Icons.groups, 'Locataires', '/locataires'),
-              _menuItem(Icons.description, 'Contrats de Bail', '/contrats'),
-              _menuItem(Icons.people, 'Utilisateurs', '/users'),
-              _menuItem(Icons.bar_chart, 'Rapports & Export', '/dashboard'),
-              _menuItem(Icons.settings, 'Paramètres', '/configurations'),
+              _menuItem(Icons.person_rounded, 'Propriétaires',
+                  '/proprietaires', AppTheme.primaryColor),
+              _menuItem(Icons.groups_rounded, 'Locataires',
+                  '/locataires', AppTheme.successColor),
+              _menuItem(Icons.description_rounded,
+                  'Contrats de Bail', '/contrats', AppTheme.infoColor),
+              _menuItem(Icons.people_rounded, 'Utilisateurs', '/users',
+                  AppTheme.warningColor),
+              _menuItem(Icons.bar_chart_rounded,
+                  'Rapports & Export', '/dashboard-stats', const Color(0xFF9B59B6)),
+              _menuItem(Icons.settings_rounded, 'Paramètres',
+                  '/configurations', AppTheme.textSecondary),
               const SizedBox(height: 20),
             ],
 
-            // PRÉFÉRENCES
+            // ── PRÉFÉRENCES ──
             _sectionTitle('PRÉFÉRENCES'),
             Obx(() => _menuItemSwitch(
-                  Icons.dark_mode,
+                  Icons.dark_mode_rounded,
                   'Mode Sombre',
                   themeCtrl.isDarkMode.value,
                   (value) => themeCtrl.toggleTheme(),
@@ -153,26 +195,36 @@ class MenuPage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // SUPPORT
+            // ── SUPPORT ──
             _sectionTitle('SUPPORT'),
-            _menuItem(Icons.help_outline, "Centre d'aide", null),
-            _menuItem(Icons.chat_bubble_outline, 'Nous contacter', null),
+            _menuItem(Icons.help_outline_rounded, "Centre d'aide", null,
+                AppTheme.infoColor),
+            _menuItem(Icons.chat_bubble_outline_rounded,
+                'Nous contacter', null, AppTheme.successColor),
 
             const SizedBox(height: 24),
 
-            // Déconnexion
+            // ── DÉCONNEXION ──
             SizedBox(
               width: double.infinity,
+              height: 50,
               child: OutlinedButton.icon(
                 onPressed: () => _confirmLogout(authCtrl),
-                icon: const Icon(Icons.logout, color: AppTheme.errorColor),
+                icon: const Icon(Icons.logout_rounded,
+                    color: AppTheme.errorColor),
                 label: const Text(
                   'Se Déconnecter',
-                  style: TextStyle(color: AppTheme.errorColor),
+                  style: TextStyle(
+                    color: AppTheme.errorColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
                 ),
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: AppTheme.errorColor),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
                 ),
               ),
             ),
@@ -193,21 +245,39 @@ class MenuPage extends StatelessWidget {
           fontSize: 12,
           fontWeight: FontWeight.w700,
           color: AppTheme.textSecondary,
-          letterSpacing: 1,
+          letterSpacing: 1.2,
         ),
       ),
     );
   }
 
-  Widget _menuItem(IconData icon, String label, String? route) {
-    return ListTile(
-      leading: Icon(icon, color: AppTheme.primaryColor),
-      title: Text(label),
-      trailing: const Icon(Icons.chevron_right, size: 20),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8)),
-      onTap: route != null ? () => Get.toNamed(route) : null,
+  Widget _menuItem(
+      IconData icon, String label, String? route, Color iconColor) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 4),
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: iconColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(icon, color: iconColor, size: 22),
+        ),
+        title: Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 15,
+          ),
+        ),
+        trailing: const Icon(Icons.chevron_right,
+            size: 20, color: AppTheme.textSecondary),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10)),
+        onTap: route != null ? () => Get.toNamed(route) : null,
+      ),
     );
   }
 
@@ -218,9 +288,26 @@ class MenuPage extends StatelessWidget {
     ValueChanged<bool> onChanged,
   ) {
     return ListTile(
-      leading: Icon(icon, color: AppTheme.primaryColor),
-      title: Text(label),
-      trailing: Switch(value: value, onChanged: onChanged),
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: AppTheme.primaryColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(icon, color: AppTheme.primaryColor, size: 22),
+      ),
+      title: Text(
+        label,
+        style: const TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 15,
+        ),
+      ),
+      trailing: Switch(
+        value: value,
+        onChanged: onChanged,
+        activeColor: AppTheme.primaryColor,
+      ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 4),
     );
   }
