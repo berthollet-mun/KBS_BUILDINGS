@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:kbs/controllers/auth_controller.dart';
 import 'package:kbs/controllers/dashboard_controller.dart';
+import 'package:kbs/views/shared/widgets/main_scaffold.dart';
 import '../../app/themes/app_theme.dart';
 import '../shared/widgets/loading_widget.dart';
 
@@ -15,6 +16,7 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final authCtrl = Get.find<AuthController>();
     final dashCtrl = Get.put(DashboardController());
+    final mainScaffoldCtrl = Get.find<MainScaffoldController>();
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -36,13 +38,13 @@ class DashboardPage extends StatelessWidget {
                 automaticallyImplyLeading: false,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Color(0xFF1A3C6E),
-                          Color(0xFF2B5EA7),
+                          AppTheme.primaryColor,
+                          AppTheme.primaryLight,
                         ],
                       ),
                     ),
@@ -101,7 +103,7 @@ class DashboardPage extends StatelessWidget {
                                     shape: BoxShape.circle,
                                   ),
                                   child: Text(
-                                    '${dashCtrl.notificationsNonLues}',
+                                    dashCtrl.notificationsNonLues.toString(),
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 10,
@@ -118,56 +120,58 @@ class DashboardPage extends StatelessWidget {
                 ),
               ),
 
-              // ===== CONTENU =====
+              // ===== CONTENT =====
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ===== 4 STAT CARDS (2x2) =====
+                      // Stats Row 1
                       Row(
                         children: [
                           Expanded(
                             child: _buildStatCard(
-                              value: '${dashCtrl.totalBiens}',
                               label: 'Biens Locatifs',
-                              color: const Color(0xFF1A3C6E),
-                              icon: Icons.apartment_rounded,
-                              onTap: () => Get.toNamed('/biens'),
+                              value: dashCtrl.totalBiens.toString(),
+                              icon: Icons.apartment,
+                              color: AppTheme.statCardBlue,
+                              onTap: () => mainScaffoldCtrl.changeTab(1),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: _buildStatCard(
-                              value: '${dashCtrl.biensOccupes}',
                               label: 'Locataires',
-                              color: const Color(0xFF27AE60),
-                              icon: Icons.people_rounded,
+                              value: dashCtrl.biensOccupes.toString(),
+                              icon: Icons.people,
+                              color: AppTheme.statCardGreen,
                               onTap: () => Get.toNamed('/locataires'),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
+                      // Stats Row 2
                       Row(
                         children: [
                           Expanded(
                             child: _buildStatCard(
+                              label: 'Taux Occupation',
                               value: '${dashCtrl.tauxOccupation.toStringAsFixed(0)}%',
-                              label: "Taux d'Occupation",
-                              color: const Color(0xFFF39C12),
-                              icon: Icons.trending_up_rounded,
+                              icon: Icons.trending_up,
+                              color: AppTheme.statCardGreen,
+                              onTap: () => mainScaffoldCtrl.changeTab(6),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: _buildStatCard(
-                              value: '${dashCtrl.ticketsEnAttente + dashCtrl.ticketsEnCours}',
                               label: 'Pannes Actives',
-                              color: const Color(0xFFE74C3C),
-                              icon: Icons.build_rounded,
-                              onTap: () => Get.toNamed('/maintenances'),
+                              value: (dashCtrl.ticketsEnAttente + dashCtrl.ticketsEnCours).toString(),
+                              icon: Icons.build,
+                              color: AppTheme.statCardRed,
+                              onTap: () => mainScaffoldCtrl.changeTab(5),
                             ),
                           ),
                         ],
@@ -175,88 +179,15 @@ class DashboardPage extends StatelessWidget {
 
                       const SizedBox(height: 24),
 
-                      // ===== REVENUS & DÉPENSES AVEC GRAPHIQUE =====
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Revenus & Dépenses',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: AppTheme.textPrimary,
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: AppTheme.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Text(
-                              'Ce mois',
-                              style: TextStyle(
-                                color: AppTheme.primaryColor,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
+                      // Quick Access Row
+                      _buildQuickAccess(mainScaffoldCtrl),
+
+                      const SizedBox(height: 24),
+
+                      // Revenue Chart
                       _buildRevenueChart(dashCtrl),
 
-                      const SizedBox(height: 24),
-
-                      // ===== ACTIONS RAPIDES =====
-                      const Text(
-                        'Actions rapides',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      _buildQuickActions(),
-
-                      const SizedBox(height: 24),
-
-                      // ===== ÉCHÉANCES EN RETARD =====
-                      if (dashCtrl.totalEcheancesEnRetard > 0) ...[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Échéances en retard',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: AppTheme.textPrimary,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () =>
-                                  Get.toNamed('/echeances-en-retard'),
-                              child: const Text(
-                                'Voir tout',
-                                style: TextStyle(
-                                  color: AppTheme.primaryColor,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        ...dashCtrl.echeancesEnRetard
-                            .take(3)
-                            .map((e) => _buildRetardCard(e)),
-                        const SizedBox(height: 24),
-                      ],
-
-                      const SizedBox(height: 80), // Space pour bottom nav
+                      const SizedBox(height: 100), // Space for bottom nav
                     ],
                   ),
                 ),
@@ -268,16 +199,127 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  // ── STAT CARD ──
-  Widget _buildStatCard({
-    required String value,
-    required String label,
-    required Color color,
+  Widget _buildQuickAccess(MainScaffoldController ctrl) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Accès Rapide',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _quickAccessItem(
+              icon: Icons.apartment,
+              label: 'Mes Biens',
+              onTap: () => ctrl.changeTab(1),
+            ),
+            _quickAccessItem(
+              icon: Icons.payments,
+              label: 'Loyers',
+              onTap: () => ctrl.changeTab(3),
+            ),
+            _quickAccessItem(
+              icon: Icons.map,
+              label: 'Carte',
+              onTap: () => ctrl.changeTab(2),
+            ),
+            _quickAccessItem(
+              icon: Icons.qr_code,
+              label: 'QR Code',
+              onTap: () => Get.toNamed('/qr-scan'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _quickAccessItem(
+              icon: Icons.build,
+              label: 'Maintenance',
+              onTap: () => ctrl.changeTab(5),
+            ),
+            _quickAccessItem(
+              icon: Icons.bar_chart,
+              label: 'Rapports',
+              onTap: () => ctrl.changeTab(6),
+            ),
+            _quickAccessItem(
+              icon: Icons.description,
+              label: 'Contrats',
+              onTap: () => Get.toNamed('/contrats'),
+            ),
+            _quickAccessItem(
+              icon: Icons.settings,
+              label: 'Paramètres',
+              onTap: () => Get.toNamed('/configurations'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _quickAccessItem({
     required IconData icon,
-    VoidCallback? onTap,
+    required String label,
+    required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: SizedBox(
+        width: 70,
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Icon(icon, color: AppTheme.primaryColor, size: 24),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+                color: AppTheme.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatCard({
+    required String label,
+    required String value,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -285,7 +327,7 @@ class DashboardPage extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.35),
+              color: color.withOpacity(0.3),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -300,7 +342,7 @@ class DashboardPage extends StatelessWidget {
                   Text(
                     value,
                     style: const TextStyle(
-                      fontSize: 28,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -317,14 +359,7 @@ class DashboardPage extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(icon, color: Colors.white, size: 22),
-            ),
+            Icon(icon, color: Colors.white, size: 24),
           ],
         ),
       ),

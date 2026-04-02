@@ -72,12 +72,6 @@ class AppPages {
       page: () => const RegisterPage(),
     ),
 
-    // ==================== DASHBOARD ====================
-    GetPage(
-      name: AppRoutes.dashboard,
-      page: () => const DashboardPage(),
-    ),
-
     // ==================== DASHBOARD STATS ====================
     GetPage(
       name: AppRoutes.dashboardStats,

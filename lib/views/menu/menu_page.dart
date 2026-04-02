@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kbs/controllers/auth_controller.dart';
 import 'package:kbs/controllers/theme_controller.dart';
+import 'package:kbs/views/shared/widgets/main_scaffold.dart';
 import '../../app/themes/app_theme.dart';
 
 class MenuPage extends StatelessWidget {
@@ -13,6 +14,7 @@ class MenuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final authCtrl = Get.find<AuthController>();
     final themeCtrl = Get.find<ThemeController>();
+    final mainScaffoldCtrl = Get.find<MainScaffoldController>();
 
     return Scaffold(
       appBar: AppBar(
@@ -56,10 +58,13 @@ class MenuPage extends StatelessWidget {
             Obx(() => Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Color(0xFF1A3C6E), Color(0xFF2B5EA7)],
+                      colors: [
+                        AppTheme.primaryColor,
+                        AppTheme.primaryLight,
+                      ],
                     ),
                     borderRadius: BorderRadius.circular(18),
                     boxShadow: [
@@ -151,36 +156,48 @@ class MenuPage extends StatelessWidget {
 
             // ── ACCÈS RAPIDE ──
             _sectionTitle('ACCÈS RAPIDE'),
-            _menuItem(Icons.apartment_rounded, 'Mes Biens', '/biens',
-                AppTheme.primaryColor),
-            _menuItem(Icons.payments_rounded, 'Suivi des Loyers',
-                '/paiements', AppTheme.successColor),
-            _menuItem(Icons.map_rounded, 'Carte des Biens',
-                '/carte-biens', AppTheme.infoColor),
-            _menuItem(Icons.qr_code_scanner_rounded, 'Scanner QR Code',
-                '/qr-scan', AppTheme.warningColor),
-            _menuItem(Icons.build_rounded, 'Maintenance & Pannes',
-                '/maintenances', AppTheme.maintenanceColor),
-            _menuItem(Icons.bar_chart_rounded, 'Tableau de Bord',
-                '/dashboard-stats', const Color(0xFF9B59B6)),
+            _menuItem(Icons.apartment_rounded, 'Mes Biens', () {
+              mainScaffoldCtrl.changeTab(1);
+            }, AppTheme.primaryColor),
+            _menuItem(Icons.payments_rounded, 'Suivi des Loyers', () {
+              mainScaffoldCtrl.changeTab(3);
+            }, AppTheme.successColor),
+            _menuItem(Icons.map_rounded, 'Carte des Biens', () {
+              mainScaffoldCtrl.changeTab(2);
+            }, AppTheme.infoColor),
+            _menuItem(Icons.qr_code_scanner_rounded, 'Scanner QR Code', () {
+              Get.toNamed('/qr-scan');
+            }, AppTheme.warningColor),
+            _menuItem(Icons.build_rounded, 'Maintenance & Pannes', () {
+              mainScaffoldCtrl.changeTab(5);
+            }, AppTheme.maintenanceColor),
+            _menuItem(Icons.bar_chart_rounded, 'Tableau de Bord', () {
+              mainScaffoldCtrl.changeTab(6);
+            }, const Color(0xFF9B59B6)),
 
             const SizedBox(height: 20),
 
             // ── GESTION ──
             if (authCtrl.isAdminOrAgent) ...[
               _sectionTitle('GESTION'),
-              _menuItem(Icons.person_rounded, 'Propriétaires',
-                  '/proprietaires', AppTheme.primaryColor),
-              _menuItem(Icons.groups_rounded, 'Locataires',
-                  '/locataires', AppTheme.successColor),
-              _menuItem(Icons.description_rounded,
-                  'Contrats de Bail', '/contrats', AppTheme.infoColor),
-              _menuItem(Icons.people_rounded, 'Utilisateurs', '/users',
-                  AppTheme.warningColor),
-              _menuItem(Icons.bar_chart_rounded,
-                  'Rapports & Export', '/dashboard-stats', const Color(0xFF9B59B6)),
-              _menuItem(Icons.settings_rounded, 'Paramètres',
-                  '/configurations', AppTheme.textSecondary),
+              _menuItem(Icons.person_rounded, 'Propriétaires', () {
+                Get.toNamed('/proprietaires');
+              }, AppTheme.primaryColor),
+              _menuItem(Icons.groups_rounded, 'Locataires', () {
+                Get.toNamed('/locataires');
+              }, AppTheme.successColor),
+              _menuItem(Icons.description_rounded, 'Contrats de Bail', () {
+                Get.toNamed('/contrats');
+              }, AppTheme.infoColor),
+              _menuItem(Icons.people_rounded, 'Utilisateurs', () {
+                Get.toNamed('/users');
+              }, AppTheme.warningColor),
+              _menuItem(Icons.bar_chart_rounded, 'Rapports & Export', () {
+                mainScaffoldCtrl.changeTab(6);
+              }, const Color(0xFF9B59B6)),
+              _menuItem(Icons.settings_rounded, 'Paramètres', () {
+                Get.toNamed('/configurations');
+              }, AppTheme.textSecondary),
               const SizedBox(height: 20),
             ],
 
@@ -197,39 +214,18 @@ class MenuPage extends StatelessWidget {
 
             // ── SUPPORT ──
             _sectionTitle('SUPPORT'),
-            _menuItem(Icons.help_outline_rounded, "Centre d'aide", null,
-                AppTheme.infoColor),
-            _menuItem(Icons.chat_bubble_outline_rounded,
-                'Nous contacter', null, AppTheme.successColor),
+            _menuItem(Icons.help_outline_rounded, 'Centre d\'aide', () {},
+                AppTheme.textSecondary),
+            _menuItem(Icons.contact_support_outlined, 'Nous contacter', () {},
+                AppTheme.textSecondary),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
 
             // ── DÉCONNEXION ──
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: OutlinedButton.icon(
-                onPressed: () => _confirmLogout(authCtrl),
-                icon: const Icon(Icons.logout_rounded,
-                    color: AppTheme.errorColor),
-                label: const Text(
-                  'Se Déconnecter',
-                  style: TextStyle(
-                    color: AppTheme.errorColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: AppTheme.errorColor),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 80),
+            _menuItem(Icons.logout_rounded, 'Se Déconnecter', () {
+              _showLogoutConfirmation(context, authCtrl);
+            }, AppTheme.errorColor),
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -238,13 +234,13 @@ class MenuPage extends StatelessWidget {
 
   Widget _sectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8, top: 4),
+      padding: const EdgeInsets.only(left: 4, bottom: 12),
       child: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 12,
-          fontWeight: FontWeight.w700,
-          color: AppTheme.textSecondary,
+          fontWeight: FontWeight.w800,
+          color: AppTheme.textSecondary.withOpacity(0.8),
           letterSpacing: 1.2,
         ),
       ),
@@ -252,78 +248,113 @@ class MenuPage extends StatelessWidget {
   }
 
   Widget _menuItem(
-      IconData icon, String label, String? route, Color iconColor) {
+      IconData icon, String title, VoidCallback onTap, Color color) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 4),
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(10),
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(14),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(icon, color: color, size: 22),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right,
+                  color: AppTheme.textSecondary.withOpacity(0.4),
+                  size: 20,
+                ),
+              ],
+            ),
           ),
-          child: Icon(icon, color: iconColor, size: 22),
         ),
-        title: Text(
-          label,
-          style: const TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 15,
-          ),
-        ),
-        trailing: const Icon(Icons.chevron_right,
-            size: 20, color: AppTheme.textSecondary),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10)),
-        onTap: route != null ? () => Get.toNamed(route) : null,
       ),
     );
   }
 
   Widget _menuItemSwitch(
-    IconData icon,
-    String label,
-    bool value,
-    ValueChanged<bool> onChanged,
-  ) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: AppTheme.primaryColor.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(10),
+      IconData icon, String title, bool value, Function(bool) onChanged) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppTheme.textSecondary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: AppTheme.textSecondary, size: 22),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: AppTheme.textPrimary,
+                  ),
+                ),
+              ),
+              Switch.adaptive(
+                value: value,
+                onChanged: onChanged,
+                activeColor: AppTheme.primaryColor,
+              ),
+            ],
+          ),
         ),
-        child: Icon(icon, color: AppTheme.primaryColor, size: 22),
       ),
-      title: Text(
-        label,
-        style: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 15,
-        ),
-      ),
-      trailing: Switch(
-        value: value,
-        onChanged: onChanged,
-        activeColor: AppTheme.primaryColor,
-      ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
     );
   }
 
-  void _confirmLogout(AuthController authCtrl) {
-    Get.defaultDialog(
-      title: 'Déconnexion',
-      middleText: 'Voulez-vous vraiment vous déconnecter ?',
-      textCancel: 'Annuler',
-      textConfirm: 'Se déconnecter',
-      confirmTextColor: Colors.white,
-      buttonColor: AppTheme.errorColor,
-      onConfirm: () {
-        Get.back();
-        authCtrl.logout();
-      },
+  void _showLogoutConfirmation(BuildContext context, AuthController authCtrl) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Déconnexion'),
+        content: const Text('Voulez-vous vraiment vous déconnecter ?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Annuler'),
+          ),
+          TextButton(
+            onPressed: () => authCtrl.logout(),
+            child: const Text(
+              'Déconnecter',
+              style: TextStyle(color: AppTheme.errorColor),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

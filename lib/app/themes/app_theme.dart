@@ -11,51 +11,51 @@ class AppTheme {
   // ==================== COULEURS PRINCIPALES (basées sur ton design) ====================
 
   // Bleu foncé principal (header, appbar, boutons principaux)
-  static const Color primaryColor = Color(0xFF1A3C6E);
+  static const Color primaryColor = Color(0xFF1E3A8A); // Bleu plus moderne/navy
   // Bleu moyen (accents, liens)
-  static const Color primaryLight = Color(0xFF2B5EA7);
+  static const Color primaryLight = Color(0xFF3B82F6);
   // Bleu très foncé (textes importants)
-  static const Color primaryDark = Color(0xFF0F2847);
+  static const Color primaryDark = Color(0xFF1E293B);
 
   // Couleur d'accent (boutons d'action, FAB)
-  static const Color accentColor = Color(0xFF2196F3);
+  static const Color accentColor = Color(0xFF2563EB);
 
   // Couleurs de statut
-  static const Color successColor = Color(0xFF27AE60);
-  static const Color warningColor = Color(0xFFF39C12);
-  static const Color errorColor = Color(0xFFE74C3C);
-  static const Color infoColor = Color(0xFF3498DB);
+  static const Color successColor = Color(0xFF10B981); // Emerald-500
+  static const Color warningColor = Color(0xFFF59E0B); // Amber-500
+  static const Color errorColor = Color(0xFFEF4444);   // Red-500
+  static const Color infoColor = Color(0xFF3B82F6);    // Blue-500
 
   // Backgrounds
-  static const Color lightBackground = Color(0xFFF5F7FA);
-  static const Color darkBackground = Color(0xFF0D1B2A);
+  static const Color lightBackground = Color(0xFFF8FAFC); // Slate-50
+  static const Color darkBackground = Color(0xFF0F172A);  // Slate-900
   static const Color cardBackground = Colors.white;
 
   // Textes
-  static const Color textPrimary = Color(0xFF2C3E50);
-  static const Color textSecondary = Color(0xFF7F8C8D);
-  static const Color textLight = Color(0xFFBDC3C7);
+  static const Color textPrimary = Color(0xFF1E293B);   // Slate-800
+  static const Color textSecondary = Color(0xFF475569); // Slate-600 (Plus contrasté pour WCAG)
+  static const Color textLight = Color(0xFF94A3B8);     // Slate-400
 
   // ==================== COULEURS SPÉCIFIQUES IMMO ====================
 
   // Statuts des biens
-  static const Color disponibleColor = Color(0xFF27AE60);
-  static const Color occupeColor = Color(0xFFF39C12);
-  static const Color loueColor = Color(0xFFE74C3C);
-  static const Color maintenanceColor = Color(0xFFE67E22);
-  static const Color venduColor = Color(0xFF95A5A6);
-  static const Color reserveColor = Color(0xFF3498DB);
+  static const Color disponibleColor = Color(0xFF10B981); // Green
+  static const Color occupeColor = Color(0xFFF59E0B);     // Amber
+  static const Color loueColor = Color(0xFFEF4444);       // Red
+  static const Color maintenanceColor = Color(0xFFF97316); // Orange
+  static const Color venduColor = Color(0xFF64748B);      // Gray
+  static const Color reserveColor = Color(0xFF3B82F6);     // Blue
 
   // Bottom nav
-  static const Color bottomNavActive = Color(0xFF1A3C6E);
-  static const Color bottomNavInactive = Color(0xFF95A5A6);
-  static const Color fabColor = Color(0xFF1A3C6E);
+  static const Color bottomNavActive = Color(0xFF1E3A8A);
+  static const Color bottomNavInactive = Color(0xFF94A3B8);
+  static const Color fabColor = Color(0xFF1E3A8A);
 
   // Cards stats dashboard
-  static const Color statCardBlue = Color(0xFF1A3C6E);
-  static const Color statCardGreen = Color(0xFF27AE60);
-  static const Color statCardOrange = Color(0xFFF39C12);
-  static const Color statCardRed = Color(0xFFE74C3C);
+  static const Color statCardBlue = Color(0xFF1E3A8A);
+  static const Color statCardGreen = Color(0xFF10B981);
+  static const Color statCardOrange = Color(0xFFF59E0B);
+  static const Color statCardRed = Color(0xFFEF4444);
 
   // ==================== STYLES DE TEXTE ====================
 

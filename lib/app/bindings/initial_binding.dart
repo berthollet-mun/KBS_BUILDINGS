@@ -38,6 +38,7 @@ import 'package:kbs/controllers/role_controller.dart';
 import 'package:kbs/controllers/theme_controller.dart';
 import 'package:kbs/controllers/user_controller.dart';
 import 'package:kbs/controllers/visite_controller.dart';
+import 'package:kbs/views/shared/widgets/main_scaffold.dart';
 
 
 class InitialBinding extends Bindings {
@@ -71,6 +72,7 @@ class InitialBinding extends Bindings {
     Get.lazyPut(() => AuthController(), fenix: true);
     Get.lazyPut(() => ThemeController(), fenix: true);
     Get.lazyPut(() => DashboardController(), fenix: true);
+    Get.lazyPut(() => MainScaffoldController(), fenix: true);
     Get.lazyPut(() => BienController(), fenix: true);
     Get.lazyPut(() => ProprietaireController(), fenix: true);
     Get.lazyPut(() => LocataireController(), fenix: true);

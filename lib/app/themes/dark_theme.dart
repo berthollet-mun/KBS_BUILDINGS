@@ -9,20 +9,20 @@ final ThemeData darkThemeData = ThemeData(
 
   // ==================== COLOR SCHEME ====================
   colorScheme: const ColorScheme.dark(
-    primary: Color(0xFF5B9BD5),
+    primary: Color(0xFF60A5FA), // Blue-400
     onPrimary: Colors.white,
-    primaryContainer: Color(0xFF1A3C6E),
-    secondary: Color(0xFF5DADE2),
+    primaryContainer: Color(0xFF1E3A8A), // Blue-900
+    secondary: Color(0xFF3B82F6), // Blue-500
     onSecondary: Colors.white,
-    surface: Color(0xFF1E2A3A),
-    onSurface: Color(0xFFE0E6ED),
-    error: Color(0xFFFF6B6B),
+    surface: Color(0xFF1E293B), // Slate-800
+    onSurface: Color(0xFFF1F5F9), // Slate-100
+    error: Color(0xFFEF4444), // Red-500
     onError: Colors.white,
   ),
 
-  primaryColor: const Color(0xFF5B9BD5),
-  scaffoldBackgroundColor: const Color(0xFF0D1B2A),
-  cardColor: const Color(0xFF1E2A3A),
+  primaryColor: const Color(0xFF60A5FA),
+  scaffoldBackgroundColor: const Color(0xFF0F172A), // Slate-900
+  cardColor: const Color(0xFF1E293B), // Slate-800
 
   // ==================== TEXT THEME ====================
   textTheme: const TextTheme(

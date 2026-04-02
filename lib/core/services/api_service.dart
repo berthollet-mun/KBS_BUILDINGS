@@ -6,7 +6,7 @@ import 'storage_service.dart';
 
 class ApiService extends GetxService {
   // ✅ CHANGE CETTE URL SELON TON ENVIRONNEMENT
-  static const String baseUrl = 'http://192.168.1.69/immo_api/api';
+  static const String baseUrl = 'http://192.168.1.239/immo_api/api';
   // Android emulator → 10.0.2.2
   // iOS simulator   → localhost
   // Device réel     → IP de ton PC (ex: 192.168.1.69)
@@ -30,9 +30,7 @@ class ApiService extends GetxService {
   }
 
   Map<String, String> get _headersMultipart {
-    final headers = <String, String>{
-      'Accept': 'application/json',
-    };
+    final headers = <String, String>{'Accept': 'application/json'};
 
     final token = _storage.getToken();
     if (token != null && token.isNotEmpty) {
@@ -70,10 +68,7 @@ class ApiService extends GetxService {
   }
 
   /// POST request
-  Future<ApiResult> post(
-    String endpoint, {
-    Map<String, dynamic>? body,
-  }) async {
+  Future<ApiResult> post(String endpoint, {Map<String, dynamic>? body}) async {
     try {
       final uri = Uri.parse('$baseUrl$endpoint');
       final response = await http
@@ -95,10 +90,7 @@ class ApiService extends GetxService {
   }
 
   /// PUT request
-  Future<ApiResult> put(
-    String endpoint, {
-    Map<String, dynamic>? body,
-  }) async {
+  Future<ApiResult> put(String endpoint, {Map<String, dynamic>? body}) async {
     try {
       final uri = Uri.parse('$baseUrl$endpoint');
       final response = await http
@@ -155,8 +147,8 @@ class ApiService extends GetxService {
       );
 
       final streamedResponse = await request.send().timeout(
-            const Duration(seconds: 60),
-          );
+        const Duration(seconds: 60),
+      );
       final response = await http.Response.fromStream(streamedResponse);
 
       return _handleResponse(response);

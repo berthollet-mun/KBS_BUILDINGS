@@ -12,7 +12,7 @@ final ThemeData lightThemeData = ThemeData(
   colorScheme: const ColorScheme.light(
     primary: AppTheme.primaryColor,
     onPrimary: Colors.white,
-    primaryContainer: Color(0xFFD6E4F0),
+    primaryContainer: Color(0xFFE2E8F0), // Slate-200
     secondary: AppTheme.accentColor,
     onSecondary: Colors.white,
     surface: Colors.white,
@@ -78,7 +78,7 @@ final ThemeData lightThemeData = ThemeData(
 
   // ==================== DIVIDER ====================
   dividerTheme: const DividerThemeData(
-    color: Color(0xFFE8ECF0),
+    color: Color(0xFFE2E8F0), // Slate-200
     thickness: 1,
     space: 1,
   ),
@@ -115,11 +115,11 @@ final ThemeData lightThemeData = ThemeData(
   inputDecorationTheme: InputDecorationTheme(
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Color(0xFFDDE2E8)),
+      borderSide: const BorderSide(color: Color(0xFFE2E8F0)), // Slate-200
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Color(0xFFDDE2E8)),
+      borderSide: const BorderSide(color: Color(0xFFE2E8F0)), // Slate-200
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
@@ -197,9 +197,9 @@ final ThemeData lightThemeData = ThemeData(
 
   // ==================== CHIP (Filtres arrondis comme dans ton design) ====================
   chipTheme: ChipThemeData(
-    backgroundColor: const Color(0xFFF0F3F7),
+    backgroundColor: const Color(0xFFF1F5F9), // Slate-100
     selectedColor: AppTheme.primaryColor,
-    disabledColor: const Color(0xFFF0F3F7),
+    disabledColor: const Color(0xFFF1F5F9), // Slate-100
     labelStyle: const TextStyle(
       fontSize: 13,
       fontWeight: FontWeight.w500,

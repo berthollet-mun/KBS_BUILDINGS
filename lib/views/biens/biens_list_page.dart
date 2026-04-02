@@ -16,15 +16,21 @@ class BiensListPage extends StatelessWidget {
     final controller = Get.put(BienController());
 
     return Scaffold(
+      backgroundColor: AppTheme.lightBackground,
       appBar: AppBar(
         title: const Text('Mes Biens'),
         backgroundColor: AppTheme.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
+        centerTitle: false,
         actions: [
           IconButton(
             onPressed: () => Get.toNamed('/bien-create'),
             icon: const Icon(Icons.add_circle_outline),
+          ),
+          IconButton(
+            onPressed: () => _showFilters(context, controller),
+            icon: const Icon(Icons.tune),
           ),
         ],
       ),
@@ -35,14 +41,15 @@ class BiensListPage extends StatelessWidget {
             color: AppTheme.primaryColor,
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: Container(
+              height: 50,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.08),
                     blurRadius: 10,
-                    offset: const Offset(0, 2),
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
@@ -51,57 +58,49 @@ class BiensListPage extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: 'Rechercher un bien, propriétaire...',
                   hintStyle: TextStyle(
-                    color: AppTheme.textSecondary.withOpacity(0.6),
+                    color: AppTheme.textSecondary.withOpacity(0.5),
                     fontSize: 14,
                   ),
                   prefixIcon: const Icon(Icons.search,
                       color: AppTheme.textSecondary),
-                  suffixIcon: IconButton(
-                    onPressed: () => _showFilters(context, controller),
-                    icon: const Icon(Icons.tune,
-                        color: AppTheme.primaryColor),
-                  ),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 14),
+                      horizontal: 16, vertical: 15),
                 ),
               ),
             ),
           ),
 
           // ── FILTER CHIPS ──
-          SizedBox(
-            height: 48,
+          Container(
+            height: 54,
+            color: Colors.white,
             child: Obx(() => ListView(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 4),
+                      horizontal: 16, vertical: 8),
                   children: [
                     _buildFilterChip(
                       label: 'Tout (${controller.biensList.length})',
-                      isSelected:
-                          controller.selectedTypeBien.value == null,
+                      isSelected: controller.selectedTypeBien.value == null,
                       onTap: () => controller.filterByType(null),
                     ),
-                    const SizedBox(width: 8),
-                    ...['maison', 'appartement', 'bureau', 'parcelle']
+                    const SizedBox(width: 10),
+                    ...['maison', 'appartement', 'bureau']
                         .map((type) => Padding(
-                              padding: const EdgeInsets.only(right: 8),
+                              padding: const EdgeInsets.only(right: 10),
                               child: _buildFilterChip(
                                 label: AppTheme.getTypeBienLabel(type),
-                                isSelected:
-                                    controller.selectedTypeBien.value ==
-                                        type,
-                                onTap: () =>
-                                    controller.filterByType(type),
-                                icon: AppTheme.getTypeBienIcon(type),
+                                isSelected: controller.selectedTypeBien.value == type,
+                                onTap: () => controller.filterByType(type),
                               ),
                             )),
                   ],
                 )),
           ),
+          const Divider(height: 1),
 
           const SizedBox(height: 4),
 
