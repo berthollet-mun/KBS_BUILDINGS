@@ -54,7 +54,7 @@ class MaintenanceFormPage extends StatelessWidget {
                       ],
                     ),
                     child: DropdownButtonFormField<int>(
-                      value: ctrl.formBienId.value,
+                      initialValue: ctrl.formBienId.value,
                       decoration: const InputDecoration(
                         labelText: 'Sélectionner un bien *',
                         prefixIcon: Icon(Icons.apartment_rounded),

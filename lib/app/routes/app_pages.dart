@@ -10,7 +10,6 @@ import '../../views/public/splash/splash_page.dart';
 import '../../views/public/welcome/welcome_page.dart';
 import '../../views/auth/login/login_page.dart';
 import '../../views/auth/register/register_page.dart';
-import '../../views/dashboard/dashboard_page.dart';
 import '../../views/dashboard/dashboard_stats_page.dart';
 import '../../views/biens/biens_list_page.dart';
 import '../../views/biens/biens_disponibles_page.dart';

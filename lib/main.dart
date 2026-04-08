@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kbs/controllers/theme_controller.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';  // ✅ Ajoute cet import
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'app/initialization.dart';
 import 'app/routes/app_pages.dart';
